@@ -1,9 +1,16 @@
+:root {
+  --color-dark: #9667e0;
+  --color-light: #fbfaff;
+}
+
 * {
   box-sizing: border-box;
+  font-family: inherit;
+  font-size: inherit;
   margin: 0;
   padding: 0;
 }
 
 body {
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Courier New", Courier, monospace;
 }
