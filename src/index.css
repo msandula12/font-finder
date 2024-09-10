@@ -1,6 +1,8 @@
 :root {
-  --color-dark: #9667e0;
-  --color-light: #fbfaff;
+  --color-gray-light: #ccc;
+  --color-primary-dark: #8242eb;
+  --color-primary-light: #d3baff;
+  --color-secondary: #abeb42;
 }
 
 * {
@@ -8,6 +10,7 @@
   font-family: inherit;
   font-size: inherit;
   margin: 0;
+  outline-color: var(--color-primary-dark);
   padding: 0;
 }
 

@@ -1,13 +1,13 @@
 import { FormEvent, SyntheticEvent, useState } from "react";
 import { BiLinkExternal } from "react-icons/bi";
-import { BiSearch } from "react-icons/bi";
+import { BiSolidBinoculars } from "react-icons/bi";
 
 import { GOOGLE_FONTS_CSS_API, GOOGLE_FONTS_FONT_URL } from "./constants";
 
 import styles from "./App.module.scss";
 
 const GOOGLE_FONTS_KEY = import.meta.env.VITE_GOOGLE_FONTS_API_KEY;
-const MAX_INPUT_LENGTH = 1000;
+const MAX_INPUT_LENGTH = 250;
 
 const TEST_FONTS = [
   "Roboto",
@@ -55,7 +55,7 @@ function App() {
   }
 
   return (
-    <div className={styles.app}>
+    <main className={styles.app}>
       <form className={styles.form} onSubmit={handleSubmit}>
         <h1>FontFinder</h1>
         <textarea
@@ -71,13 +71,17 @@ function App() {
             {searchValue.length} / {MAX_INPUT_LENGTH}
           </span>
           <button className={styles.button} disabled={!searchValue.length}>
-            <BiSearch /> Find
+            <BiSolidBinoculars /> Find
           </button>
         </div>
       </form>
       <div className={styles.fonts}>
         {fonts.map((font) => (
-          <div className={styles.font} key={font} style={{ fontFamily: font }}>
+          <section
+            className={styles.font}
+            key={font}
+            style={{ fontFamily: font }}
+          >
             <h4 className={styles.fontName}>
               {font}
               <a
@@ -95,10 +99,10 @@ function App() {
               in public or private, to manifest his religion or belief in
               teaching, practice, worship and observance.
             </p>
-          </div>
+          </section>
         ))}
       </div>
-    </div>
+    </main>
   );
 }
 
