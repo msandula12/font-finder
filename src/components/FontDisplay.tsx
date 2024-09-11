@@ -1,6 +1,6 @@
 import { BiLinkExternal } from "react-icons/bi";
 
-import { GOOGLE_FONTS_FONT_URL } from "../constants";
+import { GOOGLE_FONTS_FONT_URL } from "@/constants";
 
 import styles from "./FontDisplay.module.scss";
 

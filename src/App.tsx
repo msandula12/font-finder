@@ -1,9 +1,9 @@
 import { FormEvent, SyntheticEvent, useState } from "react";
 import { BiSolidBinoculars } from "react-icons/bi";
 
-import FontDisplay from "./components/FontDisplay";
-import Loader from "./components/Loader";
-import { GOOGLE_FONTS_CSS_API } from "./constants";
+import FontDisplay from "@/components/FontDisplay";
+import Loader from "@/components/Loader";
+import { GOOGLE_FONTS_CSS_API } from "@/constants";
 
 import styles from "./App.module.scss";
 
