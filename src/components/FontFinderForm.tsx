@@ -73,7 +73,6 @@ function FontFinderForm({ setFonts, setIsLoading }: Props) {
 
   return (
     <form className={styles.fontFinderForm} onSubmit={handleSubmit}>
-      <h1>FontFinder</h1>
       <textarea
         className={styles.textarea}
         maxLength={MAX_INPUT_LENGTH}

@@ -2,6 +2,7 @@ import { useState } from "react";
 
 import FontDisplay from "@/components/FontDisplay";
 import FontFinderForm from "@/components/FontFinderForm";
+import Header from "@/components/Header";
 import Loader from "@/components/Loader";
 
 import styles from "./App.module.scss";
@@ -12,6 +13,7 @@ function App() {
 
   return (
     <main className={styles.app}>
+      <Header />
       <FontFinderForm setFonts={setFonts} setIsLoading={setIsLoading} />
       {isLoading && <Loader />}
       {fonts.length > 0 && (
