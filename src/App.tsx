@@ -2,6 +2,7 @@ import { FormEvent, SyntheticEvent, useState } from "react";
 import { BiLinkExternal } from "react-icons/bi";
 import { BiSolidBinoculars } from "react-icons/bi";
 
+import Loader from "./components/Loader";
 import { GOOGLE_FONTS_CSS_API, GOOGLE_FONTS_FONT_URL } from "./constants";
 
 import styles from "./App.module.scss";
@@ -19,6 +20,7 @@ const TEST_FONTS = [
 
 function App() {
   const [fonts] = useState<string[]>(TEST_FONTS);
+  const [isLoading] = useState<boolean>(false);
   const [searchValue, setSearchValue] = useState<string>("");
 
   async function fetchFonts() {
@@ -75,6 +77,7 @@ function App() {
           </button>
         </div>
       </form>
+      {isLoading && <Loader />}
       <div className={styles.fonts}>
         {fonts.map((font) => (
           <section
