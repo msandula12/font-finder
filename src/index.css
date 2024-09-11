@@ -21,6 +21,10 @@
   padding: 0;
 }
 
+a {
+  color: var(--color-primary-dark);
+}
+
 body {
   font-family: var(--font-family);
 }
