@@ -8,17 +8,19 @@ import styles from "./App.module.scss";
 
 function App() {
   const [fonts, setFonts] = useState<string[]>([]);
-  const [isLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   return (
     <main className={styles.app}>
-      <FontFinderForm setFonts={setFonts} />
+      <FontFinderForm setFonts={setFonts} setIsLoading={setIsLoading} />
       {isLoading && <Loader />}
-      <div className={styles.fontDisplays}>
-        {fonts.map((font) => (
-          <FontDisplay font={font} key={font} />
-        ))}
-      </div>
+      {fonts.length > 0 && (
+        <div className={styles.fontDisplays}>
+          {fonts.map((font) => (
+            <FontDisplay font={font} key={font} />
+          ))}
+        </div>
+      )}
     </main>
   );
 }

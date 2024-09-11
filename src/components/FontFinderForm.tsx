@@ -1,4 +1,10 @@
-import { FormEvent, SyntheticEvent, useState } from "react";
+import {
+  Dispatch,
+  FormEvent,
+  SetStateAction,
+  SyntheticEvent,
+  useState,
+} from "react";
 import { BiSolidBinoculars } from "react-icons/bi";
 
 import { GOOGLE_FONTS_CSS_API, MAX_INPUT_LENGTH } from "@/constants";
@@ -16,14 +22,18 @@ const TEST_FONT_NAMES = [
 ];
 
 type Props = {
-  setFonts: (fonts: string[]) => void;
+  setFonts: Dispatch<SetStateAction<string[]>>;
+  setIsLoading: Dispatch<SetStateAction<boolean>>;
 };
 
-function FontFinderForm({ setFonts }: Props) {
+function FontFinderForm({ setFonts, setIsLoading }: Props) {
   const [fontNames] = useState<string[]>(TEST_FONT_NAMES);
   const [searchValue, setSearchValue] = useState<string>("");
 
   async function fetchFonts() {
+    setFonts([]);
+    setIsLoading(true);
+
     const fontsQueryString = fontNames
       .map((font) => `family=${font.replace(/\s/g, "+")}`)
       .join("&");
@@ -40,10 +50,14 @@ function FontFinderForm({ setFonts }: Props) {
 
     const googleFontStyles = document.getElementById("google-font-styles");
 
-    if (googleFontStyles) {
-      googleFontStyles.textContent = fontCss;
-      setFonts(fontNames);
-    }
+    // Fake loading
+    setTimeout(() => {
+      if (googleFontStyles) {
+        googleFontStyles.textContent = fontCss;
+        setFonts(fontNames);
+        setIsLoading(false);
+      }
+    }, 3000);
   }
 
   function handleSubmit(event: FormEvent) {
