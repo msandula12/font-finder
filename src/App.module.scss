@@ -12,71 +12,11 @@
   }
 }
 
-.form,
 .fontDisplays {
   display: flex;
   flex-direction: column;
-  width: min(600px, 100%);
-}
-
-.form {
-  gap: 1rem;
-  position: relative;
-}
-
-.textarea {
-  border: 4px solid var(--color-gray-light);
-  border-radius: 1rem;
-  overflow: hidden;
-  padding: 1rem 1rem 3.5rem 1rem;
-  resize: none;
-  transition: outline 0.2s linear;
-
-  &:focus {
-    outline-offset: -4px;
-    outline: 4px solid var(--color-primary-dark);
-  }
-}
-
-.toolbar {
-  align-items: center;
-  bottom: 0.5rem;
-  display: flex;
-  gap: 1rem;
-  position: absolute;
-  right: 0.5rem;
-}
-
-.button {
-  align-items: center;
-  background-color: var(--color-primary-dark);
-  border-radius: 0.5rem;
-  border: none;
-  color: #fff;
-  display: flex;
-  font-size: 18px;
-  gap: 0.5rem;
-  padding: 0.75rem 1rem;
-  transition: outline 0.2s linear;
-
-  &:disabled {
-    opacity: 0.4;
-    pointer-events: none;
-  }
-
-  &:focus {
-    outline-offset: -2px;
-    outline: 4px solid var(--color-primary-light);
-  }
-
-  &:hover {
-    cursor: pointer;
-    filter: brightness(75%);
-  }
-}
-
-.fontDisplays {
   gap: 2rem;
+  width: min(var(--max-column-width), 100%);
 }
 
 @media only screen and (min-width: 768px) {
