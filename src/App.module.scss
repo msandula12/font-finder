@@ -13,7 +13,7 @@
 }
 
 .form,
-.fonts {
+.fontDisplays {
   display: flex;
   flex-direction: column;
   width: min(600px, 100%);
@@ -75,31 +75,8 @@
   }
 }
 
-.fonts {
+.fontDisplays {
   gap: 2rem;
-}
-
-.font {
-  text-align: left;
-}
-
-.fontName {
-  align-items: center;
-  display: flex;
-  font-size: 24px;
-  gap: 0.5rem;
-  margin-bottom: 0.5rem;
-}
-
-.fontLink {
-  align-items: center;
-  color: var(--color-primary-light);
-  display: flex;
-  transition: color 0.2s linear;
-
-  &:hover {
-    color: var(--color-primary-dark);
-  }
 }
 
 @media only screen and (min-width: 768px) {

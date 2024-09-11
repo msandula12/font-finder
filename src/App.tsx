@@ -1,9 +1,9 @@
 import { FormEvent, SyntheticEvent, useState } from "react";
-import { BiLinkExternal } from "react-icons/bi";
 import { BiSolidBinoculars } from "react-icons/bi";
 
+import FontDisplay from "./components/FontDisplay";
 import Loader from "./components/Loader";
-import { GOOGLE_FONTS_CSS_API, GOOGLE_FONTS_FONT_URL } from "./constants";
+import { GOOGLE_FONTS_CSS_API } from "./constants";
 
 import styles from "./App.module.scss";
 
@@ -78,31 +78,9 @@ function App() {
         </div>
       </form>
       {isLoading && <Loader />}
-      <div className={styles.fonts}>
+      <div className={styles.fontDisplays}>
         {fonts.map((font) => (
-          <section
-            className={styles.font}
-            key={font}
-            style={{ fontFamily: font }}
-          >
-            <h4 className={styles.fontName}>
-              {font}
-              <a
-                className={styles.fontLink}
-                href={`${GOOGLE_FONTS_FONT_URL}/${font}`}
-                target="_blank"
-              >
-                <BiLinkExternal />
-              </a>
-            </h4>
-            <p>
-              Everyone has the right to freedom of thought, conscience and
-              religion; this right includes freedom to change his religion or
-              belief, and freedom, either alone or in community with others and
-              in public or private, to manifest his religion or belief in
-              teaching, practice, worship and observance.
-            </p>
-          </section>
+          <FontDisplay font={font} key={font} />
         ))}
       </div>
     </main>
