@@ -7,19 +7,17 @@ import {
 } from "react";
 import { BiSolidBinoculars } from "react-icons/bi";
 
-import { GOOGLE_FONTS_CSS_API, MAX_INPUT_LENGTH } from "@/constants";
+import {
+  GOOGLE_FONTS_CSS_API,
+  MAX_INPUT_LENGTH,
+  OPENAI_URL,
+  PROMPT_TEXT,
+} from "@/constants";
 
 import styles from "./FontFinderForm.module.scss";
 
 const GOOGLE_FONTS_KEY = import.meta.env.VITE_GOOGLE_FONTS_API_KEY;
-
-const TEST_FONT_NAMES = [
-  "Roboto",
-  "Noto Serif",
-  "Protest Guerrilla",
-  "Sevillana",
-  "Inconsolata",
-];
+const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
 
 type Props = {
   setFonts: Dispatch<SetStateAction<string[]>>;
@@ -27,37 +25,57 @@ type Props = {
 };
 
 function FontFinderForm({ setFonts, setIsLoading }: Props) {
-  const [fontNames] = useState<string[]>(TEST_FONT_NAMES);
   const [searchValue, setSearchValue] = useState<string>("");
 
   async function fetchFonts() {
     setFonts([]);
     setIsLoading(true);
 
+    const gptResponse = await fetch(OPENAI_URL, {
+      body: JSON.stringify({
+        messages: [
+          {
+            content: `${PROMPT_TEXT}: ${searchValue}`,
+            role: "user",
+          },
+        ],
+        model: "gpt-3.5-turbo",
+      }),
+      headers: {
+        Authorization: `Bearer ${OPENAI_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+    });
+
+    if (!gptResponse.ok) {
+      const error = await gptResponse.json();
+      throw new Error(`Response status: ${error.error?.message}`);
+    }
+
+    const gptData = await gptResponse.json();
+    const fontNames: string[] = JSON.parse(
+      gptData.choices[0]?.message?.content
+    );
     const fontsQueryString = fontNames
       .map((font) => `family=${font.replace(/\s/g, "+")}`)
       .join("&");
-
-    const response = await fetch(
+    const fontsResponse = await fetch(
       `${GOOGLE_FONTS_CSS_API}?key=${GOOGLE_FONTS_KEY}&${fontsQueryString}`
     );
 
-    if (!response.ok) {
-      throw new Error(`Response status: ${response.status}`);
+    if (!fontsResponse.ok) {
+      throw new Error(`Response status: ${fontsResponse.status}`);
     }
 
-    const fontCss = await response.text();
-
+    const fontCss = await fontsResponse.text();
     const googleFontStyles = document.getElementById("google-font-styles");
 
-    // Fake loading
-    setTimeout(() => {
-      if (googleFontStyles) {
-        googleFontStyles.textContent = fontCss;
-        setFonts(fontNames);
-        setIsLoading(false);
-      }
-    }, 3000);
+    if (googleFontStyles) {
+      googleFontStyles.textContent = fontCss;
+      setFonts(fontNames);
+      setIsLoading(false);
+    }
   }
 
   function handleSubmit(event: FormEvent) {
@@ -77,7 +95,7 @@ function FontFinderForm({ setFonts, setIsLoading }: Props) {
         className={styles.textarea}
         maxLength={MAX_INPUT_LENGTH}
         onChange={updateSearchValue}
-        placeholder={`Describe the kind of fonts you're looking for (e.g., "Bold, rounded fonts that looks good in all caps")`}
+        placeholder={`Describe the kind of fonts you're looking for (e.g., "Bold, rounded fonts that look good in all caps")`}
         rows={4}
         value={searchValue}
       />
