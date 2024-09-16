@@ -1,33 +1,33 @@
 import { useState } from "react";
+import { BiSolidBinoculars } from "react-icons/bi";
 
-import FontDisplay from "@/components/FontDisplay";
 import FontFinderForm from "@/components/FontFinderForm";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
-import Loader from "@/components/Loader";
+import Messages from "@/components/Messages";
+import { Message } from "@/types";
 
 import styles from "./App.module.scss";
 
 function App() {
-  const [fonts, setFonts] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [messages, setMessages] = useState<Message[]>([]);
 
   return (
-    <main className={styles.app}>
-      <div className={styles.appBody}>
-        <Header />
-        <FontFinderForm setFonts={setFonts} setIsLoading={setIsLoading} />
-        {isLoading && <Loader />}
-        {fonts.length > 0 && (
-          <div className={styles.fontDisplays}>
-            {fonts.map((font) => (
-              <FontDisplay font={font} key={font} />
-            ))}
-          </div>
-        )}
-      </div>
+    <div className={styles.app}>
+      <Header />
+      <main className={styles.main}>
+        <div className={styles.content}>
+          {messages.length ? (
+            <Messages isLoading={isLoading} messages={messages} />
+          ) : (
+            <BiSolidBinoculars className={styles.placeholder} />
+          )}
+        </div>
+      </main>
+      <FontFinderForm setIsLoading={setIsLoading} setMessages={setMessages} />
       <Footer />
-    </main>
+    </div>
   );
 }
 

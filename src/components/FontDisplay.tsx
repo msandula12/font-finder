@@ -10,7 +10,7 @@ type Props = {
 
 function FontDisplay({ font }: Props) {
   return (
-    <section className={styles.fontDisplay} style={{ fontFamily: font }}>
+    <section className={styles.fontDisplay}>
       <h4 className={styles.fontDisplayName}>
         {font}
         <a
@@ -21,7 +21,7 @@ function FontDisplay({ font }: Props) {
           <BiLinkExternal />
         </a>
       </h4>
-      <p>
+      <p style={{ fontFamily: font }}>
         Everyone has the right to freedom of thought, conscience and religion;
         this right includes freedom to change his religion or belief, and
         freedom, either alone or in community with others and in public or

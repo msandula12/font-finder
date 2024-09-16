@@ -1,0 +1,59 @@
+.messages {
+  align-self: flex-end;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+}
+
+.message {
+  display: grid;
+  gap: 1rem;
+  width: min(calc(var(--max-column-width) * 0.75), 100%);
+}
+
+.appMessage {
+  align-self: start;
+  grid-template-columns: auto 1fr;
+  justify-items: start;
+
+  .chat {
+    background-color: #eee;
+  }
+}
+
+.userMessage {
+  align-self: end;
+  grid-template-columns: auto;
+  justify-items: end;
+
+  .chat {
+    background-color: var(--color-primary-light);
+  }
+}
+
+.messageLogo {
+  color: var(--color-primary-dark);
+  font-size: 32px;
+  margin-top: 0.75rem;
+
+  &.loading {
+    animation: 0.8s loading infinite alternate;
+  }
+}
+
+.chat {
+  border-radius: 0.5rem;
+  padding: 1rem;
+}
+
+@keyframes loading {
+  from {
+    color: var(--color-primary-dark);
+    transform: scale(1);
+  }
+  to {
+    color: var(--color-primary-light);
+    transform: scale(0.2);
+  }
+}
