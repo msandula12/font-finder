@@ -11,18 +11,11 @@ import {
 import { BiSolidBinoculars } from "react-icons/bi";
 
 import FontDisplay from "@/components/FontDisplay";
-import {
-  GOOGLE_FONTS_CSS_API,
-  MAX_INPUT_LENGTH,
-  OPENAI_URL,
-  PROMPT_TEXT,
-} from "@/constants";
+import { MAX_INPUT_LENGTH } from "@/constants";
+import { getGoogleFontStyles, getGptResponse } from "@/services";
 import { Message } from "@/types";
 
 import styles from "./FontFinderForm.module.scss";
-
-const GOOGLE_FONTS_KEY = import.meta.env.VITE_GOOGLE_FONTS_API_KEY;
-const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
 
 type Props = {
   setIsLoading: Dispatch<SetStateAction<boolean>>;
@@ -32,7 +25,7 @@ type Props = {
 function FontFinderForm({ setIsLoading, setMessages }: Props) {
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
-  const [searchValue, setSearchValue] = useState<string>("");
+  const [userPrompt, setUserPrompt] = useState<string>("");
 
   useEffect(() => {
     if (textareaRef.current) {
@@ -41,56 +34,23 @@ function FontFinderForm({ setIsLoading, setMessages }: Props) {
   }, []);
 
   async function findFonts() {
-    if (!searchValue.length) return;
+    if (!userPrompt.length) return;
 
     setMessages((prevMessages) => [
       ...prevMessages,
       {
-        message: searchValue,
+        message: <p>{userPrompt}</p>,
         type: "user",
       },
     ]);
     setIsLoading(true);
-    setSearchValue("");
+    setUserPrompt("");
 
-    const gptResponse = await fetch(OPENAI_URL, {
-      body: JSON.stringify({
-        messages: [
-          {
-            content: `${PROMPT_TEXT}: ${searchValue}`,
-            role: "user",
-          },
-        ],
-        model: "gpt-3.5-turbo",
-      }),
-      headers: {
-        Authorization: `Bearer ${OPENAI_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      method: "POST",
-    });
-
-    if (!gptResponse.ok) {
-      const error = await gptResponse.json();
-      throw new Error(`Response status: ${error.error?.message}`);
-    }
-
-    const gptData = await gptResponse.json();
+    const gptData = await getGptResponse(userPrompt);
     const fontNames: string[] = JSON.parse(
       gptData.choices[0]?.message?.content
     );
-    const fontsQueryString = fontNames
-      .map((font) => `family=${font.replace(/\s/g, "+")}`)
-      .join("&");
-    const fontsResponse = await fetch(
-      `${GOOGLE_FONTS_CSS_API}?key=${GOOGLE_FONTS_KEY}&${fontsQueryString}`
-    );
-
-    if (!fontsResponse.ok) {
-      throw new Error(`Response status: ${fontsResponse.status}`);
-    }
-
-    const fontCss = await fontsResponse.text();
+    const fontCss = await getGoogleFontStyles(fontNames);
     const googleFontStyles = document.getElementById("google-font-styles");
 
     if (googleFontStyles) {
@@ -117,8 +77,9 @@ function FontFinderForm({ setIsLoading, setMessages }: Props) {
     }
   }
 
-  function handleKeyPress({ key }: KeyboardEvent<HTMLTextAreaElement>) {
-    if (key === "Enter") {
+  function handleKeyPress(event: KeyboardEvent<HTMLTextAreaElement>) {
+    if (event.key === "Enter") {
+      event.preventDefault();
       findFonts();
     }
   }
@@ -128,10 +89,10 @@ function FontFinderForm({ setIsLoading, setMessages }: Props) {
     findFonts();
   }
 
-  function updateSearchValue({
+  function updateUserPrompt({
     currentTarget: { value },
   }: SyntheticEvent<HTMLTextAreaElement>) {
-    setSearchValue(value);
+    setUserPrompt(value);
   }
 
   return (
@@ -139,18 +100,18 @@ function FontFinderForm({ setIsLoading, setMessages }: Props) {
       <textarea
         className={styles.textarea}
         maxLength={MAX_INPUT_LENGTH}
-        onChange={updateSearchValue}
+        onChange={updateUserPrompt}
         onKeyDown={handleKeyPress}
         placeholder="Show me some bold, rounded, sort-of cartoonish fonts that look good in all caps."
         ref={textareaRef}
         rows={3}
-        value={searchValue}
+        value={userPrompt}
       />
       <div className={styles.toolbar}>
         <span>
-          {searchValue.length} / {MAX_INPUT_LENGTH}
+          {userPrompt.length} / {MAX_INPUT_LENGTH}
         </span>
-        <button className={styles.button} disabled={!searchValue.length}>
+        <button className={styles.button} disabled={!userPrompt.length}>
           <BiSolidBinoculars />
         </button>
       </div>
