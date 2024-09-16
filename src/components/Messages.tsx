@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { BiSolidBinoculars } from "react-icons/bi";
 
 import { Message } from "@/types";
+import { cx } from "@/utils";
 
 import styles from "./Messages.module.scss";
 
@@ -28,9 +29,10 @@ function Messages({ isLoading, messages }: Props) {
     <section className={styles.messages} ref={messagesRef}>
       {messages.map((message, index) => (
         <div
-          className={`${styles.message} ${
-            message.type === "app" ? styles.appMessage : styles.userMessage
-          }`}
+          className={cx(styles.message, {
+            [styles.appMessage]: message.type === "app",
+            [styles.userMessage]: message.type === "user",
+          })}
           key={index + 1}
         >
           {message.type === "app" && (
@@ -40,9 +42,9 @@ function Messages({ isLoading, messages }: Props) {
         </div>
       ))}
       {isLoading && (
-        <div className={`${styles.message} ${styles.appMessage}`}>
+        <div className={cx(styles.message, styles.appMessage)}>
           <BiSolidBinoculars
-            className={`${styles.messageLogo} ${styles.loading}`}
+            className={cx(styles.messageLogo, styles.loading)}
           />
           <div className={styles.chat}>...</div>
         </div>
