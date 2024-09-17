@@ -1,21 +1,21 @@
 import { GOOGLE_FONTS_CSS_API, OPENAI_URL, PROMPT_TEXT } from "@/constants";
 
 export async function getGoogleFontStyles(fontNames: string[]) {
-  const fontsQueryString = fontNames
+  const queryString = fontNames
     .map((font) => `family=${font.replace(/\s/g, "+")}`)
     .join("&");
 
-  const fontsResponse = await fetch(
+  const response = await fetch(
     `${GOOGLE_FONTS_CSS_API}?key=${
       import.meta.env.VITE_GOOGLE_FONTS_API_KEY
-    }&${fontsQueryString}`
+    }&${queryString}`
   );
 
-  if (!fontsResponse.ok) {
-    throw new Error(`Response status: ${fontsResponse.status}`);
+  if (!response.ok) {
+    throw new Error(`Response status: ${response.status}`);
   }
 
-  const fontCss = await fontsResponse.text();
+  const fontCss = await response.text();
 
   return fontCss;
 }

@@ -46,26 +46,43 @@ function FontFinderForm({ setIsLoading, setMessages }: Props) {
     setIsLoading(true);
     setUserPrompt("");
 
-    const gptData = await getGptResponse(userPrompt);
-    const fontNames: string[] = JSON.parse(
-      gptData.choices[0]?.message?.content
-    );
-    const fontCss = await getGoogleFontStyles(fontNames);
-    const googleFontStyles = document.getElementById("google-font-styles");
+    try {
+      const gptData = await getGptResponse(userPrompt);
+      const fontNames: string[] = JSON.parse(
+        gptData.choices[0]?.message?.content
+      );
 
-    if (googleFontStyles) {
-      googleFontStyles.textContent += fontCss;
+      const fontCss = await getGoogleFontStyles(fontNames);
+      const googleFontStyles = document.getElementById("google-font-styles");
 
+      if (googleFontStyles) {
+        googleFontStyles.textContent += fontCss;
+
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          {
+            message: (
+              <>
+                {fontNames.map((fontName) => (
+                  <FontDisplay font={fontName} key={fontName} />
+                ))}
+              </>
+            ),
+            type: "app",
+          },
+        ]);
+        setIsLoading(false);
+
+        if (textareaRef.current) {
+          textareaRef.current.focus();
+        }
+      }
+    } catch (error) {
+      console.error(error);
       setMessages((prevMessages) => [
         ...prevMessages,
         {
-          message: (
-            <>
-              {fontNames.map((fontName) => (
-                <FontDisplay font={fontName} key={fontName} />
-              ))}
-            </>
-          ),
+          message: <p>Sorry, something went wrong! Please try again later.</p>,
           type: "app",
         },
       ]);
