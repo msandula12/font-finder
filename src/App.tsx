@@ -17,16 +17,16 @@ function App() {
     <div className={styles.app}>
       <Header />
       <main className={styles.main}>
-        <div className={styles.content}>
-          {messages.length ? (
-            <Messages isLoading={isLoading} messages={messages} />
-          ) : (
-            <BiSolidBinoculars className={styles.placeholder} />
-          )}
-        </div>
+        {messages.length > 0 ? (
+          <Messages isLoading={isLoading} messages={messages} />
+        ) : (
+          <BiSolidBinoculars className={styles.placeholder} />
+        )}
       </main>
-      <FontFinderForm setIsLoading={setIsLoading} setMessages={setMessages} />
-      <Footer />
+      <div className={styles.bottom}>
+        <FontFinderForm setIsLoading={setIsLoading} setMessages={setMessages} />
+        <Footer />
+      </div>
     </div>
   );
 }

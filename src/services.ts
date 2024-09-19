@@ -1,4 +1,4 @@
-import { GOOGLE_FONTS_CSS_API, OPENAI_URL, PROMPT_TEXT } from "@/constants";
+import { GOOGLE_FONTS_CSS_API, OPENAI_URL } from "@/constants";
 
 export async function getGoogleFontStyles(fontNames: string[]) {
   const queryString = fontNames
@@ -21,6 +21,9 @@ export async function getGoogleFontStyles(fontNames: string[]) {
 }
 
 export async function getGptResponse(userPrompt: string) {
+  const PROMPT_TEXT =
+    "Give me the names of 5 Google Fonts that meet the following description (I only want the names of the fonts, no other details, in an array)";
+
   const response = await fetch(OPENAI_URL, {
     body: JSON.stringify({
       messages: [

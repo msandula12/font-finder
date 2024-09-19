@@ -11,7 +11,6 @@ import {
 import { BiSolidBinoculars } from "react-icons/bi";
 
 import FontDisplay from "@/components/FontDisplay";
-import { MAX_INPUT_LENGTH } from "@/constants";
 import { getGoogleFontStyles, getGptResponse } from "@/services";
 import { Message } from "@/types";
 
@@ -23,13 +22,13 @@ type Props = {
 };
 
 function FontFinderForm({ setIsLoading, setMessages }: Props) {
-  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
   const [userPrompt, setUserPrompt] = useState<string>("");
 
   useEffect(() => {
-    if (textareaRef.current) {
-      textareaRef.current.focus();
+    if (inputRef.current) {
+      inputRef.current.focus();
     }
   }, []);
 
@@ -73,8 +72,8 @@ function FontFinderForm({ setIsLoading, setMessages }: Props) {
         ]);
         setIsLoading(false);
 
-        if (textareaRef.current) {
-          textareaRef.current.focus();
+        if (inputRef.current) {
+          inputRef.current.focus();
         }
       }
     } catch (error) {
@@ -88,13 +87,13 @@ function FontFinderForm({ setIsLoading, setMessages }: Props) {
       ]);
       setIsLoading(false);
 
-      if (textareaRef.current) {
-        textareaRef.current.focus();
+      if (inputRef.current) {
+        inputRef.current.focus();
       }
     }
   }
 
-  function handleKeyPress(event: KeyboardEvent<HTMLTextAreaElement>) {
+  function handleKeyPress(event: KeyboardEvent<HTMLInputElement>) {
     if (event.key === "Enter") {
       event.preventDefault();
       findFonts();
@@ -108,30 +107,23 @@ function FontFinderForm({ setIsLoading, setMessages }: Props) {
 
   function updateUserPrompt({
     currentTarget: { value },
-  }: SyntheticEvent<HTMLTextAreaElement>) {
+  }: SyntheticEvent<HTMLInputElement>) {
     setUserPrompt(value);
   }
 
   return (
-    <form className={styles.fontFinderForm} onSubmit={handleSubmit}>
-      <textarea
-        className={styles.textarea}
-        maxLength={MAX_INPUT_LENGTH}
+    <form className={styles.form} onSubmit={handleSubmit}>
+      <input
+        className={styles.input}
         onChange={updateUserPrompt}
         onKeyDown={handleKeyPress}
-        placeholder="Show me some bold, rounded, sort-of cartoonish fonts that look good in all caps."
-        ref={textareaRef}
-        rows={3}
+        placeholder="Show me fonts that are fun but professional"
+        ref={inputRef}
         value={userPrompt}
       />
-      <div className={styles.toolbar}>
-        <span>
-          {userPrompt.length} / {MAX_INPUT_LENGTH}
-        </span>
-        <button className={styles.button} disabled={!userPrompt.length}>
-          <BiSolidBinoculars />
-        </button>
-      </div>
+      <button className={styles.button} disabled={!userPrompt.length}>
+        <BiSolidBinoculars />
+      </button>
     </form>
   );
 }

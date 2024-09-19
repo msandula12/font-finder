@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { BiSolidBinoculars } from "react-icons/bi";
 
 import { Message } from "@/types";
@@ -12,21 +12,17 @@ type Props = {
 };
 
 function Messages({ isLoading, messages }: Props) {
-  const messagesRef = useRef<HTMLElement | null>(null);
-
   useEffect(() => {
     setTimeout(() => {
-      if (messagesRef.current) {
-        messagesRef.current.scrollIntoView({
-          behavior: "smooth",
-          block: "end",
-        });
-      }
-    }, 100);
+      window.scrollTo({
+        behavior: "smooth",
+        top: document.body.scrollHeight,
+      });
+    }, 250);
   }, [messages.length]);
 
   return (
-    <section className={styles.messages} ref={messagesRef}>
+    <section className={styles.messages}>
       {messages.map((message, index) => (
         <div
           className={cx(styles.message, {
