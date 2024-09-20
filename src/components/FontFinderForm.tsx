@@ -117,7 +117,7 @@ function FontFinderForm({ setIsLoading, setMessages }: Props) {
         className={styles.input}
         onChange={updateUserPrompt}
         onKeyDown={handleKeyPress}
-        placeholder="Show me fonts that are fun but professional"
+        placeholder="I want something fun but professional"
         ref={inputRef}
         value={userPrompt}
       />
