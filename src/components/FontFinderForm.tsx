@@ -121,7 +121,11 @@ function FontFinderForm({ setIsLoading, setMessages }: Props) {
         ref={inputRef}
         value={userPrompt}
       />
-      <button className={styles.button} disabled={!userPrompt.length}>
+      <button
+        aria-label="Send"
+        className={styles.button}
+        disabled={!userPrompt.length}
+      >
         <BiSolidBinoculars />
       </button>
     </form>
