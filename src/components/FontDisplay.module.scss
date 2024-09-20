@@ -16,11 +16,11 @@
 
 .fontDisplayLink {
   align-items: center;
-  color: var(--color-primary-light);
+  color: var(--color-primary-dark);
   display: flex;
   transition: color 0.2s linear;
 
   &:hover {
-    color: var(--color-primary-dark);
+    filter: brightness(1.5);
   }
 }

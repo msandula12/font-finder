@@ -1,9 +1,8 @@
 :root {
   /* Colors */
   --color-gray-light: #ccc;
-  --color-primary-dark: #8242eb;
-  --color-primary-light: #d3baff;
-  --color-secondary: #abeb42;
+  --color-primary-dark: #2d6a4f;
+  --color-primary-light: #b7e5d8;
 
   /* Dimensions */
   --max-column-width: 600px;
