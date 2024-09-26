@@ -13,15 +13,16 @@
   display: grid;
   gap: 0.5rem;
   width: min(calc(var(--max-column-width) * 0.75), 100%);
+  word-break: break-word;
 }
 
 /* Adds extra margin between user and app message groupings */
-.userMessage + .appMessage,
-.appMessage + .userMessage {
+.fromMe + .fromThem,
+.fromThem + .fromMe {
   margin-top: 1rem;
 }
 
-.appMessage {
+.fromThem {
   align-self: start;
   grid-template-columns: auto 1fr;
   justify-items: start;
@@ -31,7 +32,7 @@
   }
 }
 
-.userMessage {
+.fromMe {
   align-self: end;
   grid-template-columns: auto;
   justify-items: end;
@@ -41,7 +42,7 @@
   }
 }
 
-.messageLogo {
+.avatar {
   align-self: end;
   color: var(--color-primary-dark);
   visibility: hidden;
@@ -69,8 +70,8 @@
 }
 
 /* Adds tail to last user message in a group */
-.userMessage:last-of-type > .chat::before,
-.userMessage:not(:last-of-type):has(+ .appMessage) > .chat::before {
+.fromMe:last-of-type > .chat::before,
+.fromMe:not(:last-of-type):has(+ .fromThem) > .chat::before {
   border-bottom-left-radius: 1rem;
   border-color: var(--color-primary-light);
   box-shadow: -0.25rem 0 0 var(--color-primary-light);
@@ -78,8 +79,8 @@
 }
 
 /* Adds tail to last app message in a group */
-.appMessage:last-of-type > .chat::before,
-.appMessage:not(:last-of-type):has(+ .userMessage) > .chat::before {
+.fromThem:last-of-type > .chat::before,
+.fromThem:not(:last-of-type):has(+ .fromMe) > .chat::before {
   border-bottom-right-radius: 1rem;
   border-color: #eee;
   box-shadow: 0.25rem 0 0 #eee;
@@ -87,8 +88,8 @@
 }
 
 /* Adds logo to last app message in a group */
-.appMessage:last-of-type > .messageLogo,
-.appMessage:not(:last-of-type):has(+ .userMessage) > .messageLogo {
+.fromThem:last-of-type > .avatar,
+.fromThem:not(:last-of-type):has(+ .fromMe) > .avatar {
   visibility: visible;
 }
 

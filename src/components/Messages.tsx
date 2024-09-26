@@ -26,22 +26,20 @@ function Messages({ isLoading, messages }: Props) {
       {messages.map((message, index) => (
         <div
           className={cx(styles.message, {
-            [styles.appMessage]: message.type === "app",
-            [styles.userMessage]: message.type === "user",
+            [styles.fromThem]: message.type === "app",
+            [styles.fromMe]: message.type === "user",
           })}
           key={index + 1}
         >
           {message.type === "app" && (
-            <BiSolidBinoculars className={styles.messageLogo} />
+            <BiSolidBinoculars className={styles.avatar} />
           )}
           <div className={styles.chat}>{message.message}</div>
         </div>
       ))}
       {isLoading && (
-        <div className={cx(styles.message, styles.appMessage)}>
-          <BiSolidBinoculars
-            className={cx(styles.messageLogo, styles.loading)}
-          />
+        <div className={cx(styles.message, styles.fromThem)}>
+          <BiSolidBinoculars className={cx(styles.avatar, styles.loading)} />
           <div className={styles.chat}>...</div>
         </div>
       )}
