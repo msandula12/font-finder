@@ -11,7 +11,7 @@ import {
 import { BiSolidBinoculars } from "react-icons/bi";
 
 import FontDisplay from "@/components/FontDisplay";
-import { getGoogleFontStyles, getGptResponse } from "@/services";
+import { getGoogleFonts, getFontDescriptorsFromGpt } from "@/services";
 import { Message } from "@/types";
 
 import styles from "./FontFinderForm.module.scss";
@@ -46,35 +46,46 @@ function FontFinderForm({ setIsLoading, setMessages }: Props) {
     setUserPrompt("");
 
     try {
-      const gptData = await getGptResponse(userPrompt);
-      const fontNames: string[] = JSON.parse(
-        gptData.choices[0]?.message?.content
-      );
+      const descriptors = await getFontDescriptorsFromGpt(userPrompt);
+      const fonts = await getGoogleFonts(descriptors);
 
-      const fontCss = await getGoogleFontStyles(fontNames);
-      const googleFontStyles = document.getElementById("google-font-styles");
+      for (const font of fonts) {
+        try {
+          // Create a <link> for each font
+          const link = document.createElement("link");
+          link.href = `https://fonts.googleapis.com/css?family=${encodeURIComponent(
+            font.family
+          )}`;
+          link.rel = "stylesheet";
+          document.head.appendChild(link);
 
-      if (googleFontStyles) {
-        googleFontStyles.textContent += fontCss;
-
-        setMessages((prevMessages) => [
-          ...prevMessages,
-          {
-            message: (
-              <>
-                {fontNames.map((fontName) => (
-                  <FontDisplay font={fontName} key={fontName} />
-                ))}
-              </>
-            ),
-            type: "app",
-          },
-        ]);
-        setIsLoading(false);
-
-        if (inputRef.current) {
-          inputRef.current.focus();
+          // Proceed even if a font fails to load
+          await new Promise((resolve) => {
+            link.onload = resolve;
+            link.onerror = resolve;
+          });
+        } catch (error) {
+          console.error(`Error loading font ${font.family}:`, error);
         }
+      }
+
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        {
+          message: (
+            <>
+              {fonts.map(({ family }) => (
+                <FontDisplay font={family} key={family} />
+              ))}
+            </>
+          ),
+          type: "app",
+        },
+      ]);
+      setIsLoading(false);
+
+      if (inputRef.current) {
+        inputRef.current.focus();
       }
     } catch (error) {
       console.error(error);

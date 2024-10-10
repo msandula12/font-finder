@@ -1,34 +1,47 @@
-import { GOOGLE_FONTS_CSS_API, OPENAI_URL } from "@/constants";
+import {
+  GOOGLE_FONTS_API,
+  MAX_FONTS_TO_DISPLAY,
+  OPENAI_URL,
+} from "@/constants";
+import { Font } from "@/types";
 
-export async function getGoogleFontStyles(fontNames: string[]) {
-  const queryString = fontNames
-    .map((font) => `family=${font.replace(/\s/g, "+")}`)
-    .join("&");
-
+export async function getGoogleFonts(descriptors: string[]): Promise<Font[]> {
   const response = await fetch(
-    `${GOOGLE_FONTS_CSS_API}?key=${
+    `${GOOGLE_FONTS_API}?key=${
       import.meta.env.VITE_GOOGLE_FONTS_API_KEY
-    }&${queryString}`
+    }&sort=popularity`
   );
 
   if (!response.ok) {
     throw new Error(`Response status: ${response.status}`);
   }
 
-  const fontCss = await response.text();
+  const data = await response.json();
 
-  return fontCss;
+  const matchedFonts: Font[] = data.items.filter((font: Font) =>
+    descriptors.some(
+      (term) =>
+        font.family.toLowerCase().includes(term.toLowerCase()) ||
+        font.category.toLowerCase().includes(term.toLowerCase())
+    )
+  );
+
+  return matchedFonts.slice(0, MAX_FONTS_TO_DISPLAY);
 }
 
-export async function getGptResponse(userPrompt: string) {
-  const PROMPT_TEXT =
-    "Give me the names of 5 Google Fonts that meet the following look and feel (I only want the names of the fonts, no other details, in an array)";
-
+export async function getFontDescriptorsFromGpt(
+  userPrompt: string
+): Promise<string[]> {
   const response = await fetch(OPENAI_URL, {
     body: JSON.stringify({
       messages: [
         {
-          content: `${PROMPT_TEXT}: ${userPrompt}`,
+          role: "system",
+          content:
+            "You are a helpful assistant that generates search terms for fonts based on natural language descriptions. Provide a comma-separated list of relevant terms.",
+        },
+        {
+          content: `Generate search terms for fonts described as: ${userPrompt}`,
           role: "user",
         },
       ],
@@ -48,5 +61,7 @@ export async function getGptResponse(userPrompt: string) {
 
   const data = await response.json();
 
-  return data;
+  return data.choices[0]?.message?.content
+    .split(",")
+    .map((term: string) => term.trim());
 }
